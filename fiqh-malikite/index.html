@@ -123,8 +123,14 @@ i.gl{text-decoration:underline dotted var(--gold);text-underline-offset:3px;curs
 .dock button.on svg,.dock button.on{color:var(--gold2)}
 body.focus .top,body.focus .dock{transform:translateY(110%)}body.focus .top{transform:translateY(-110%)}
 .top{transition:transform .25s}
-.tts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(72px + env(safe-area-inset-bottom));z-index:21;background:var(--green);color:var(--on);border-radius:999px;display:flex;align-items:center;gap:4px;padding:4px 6px 4px 14px;box-shadow:0 8px 24px -10px #0008;font-size:14px}
+.tts{position:fixed;left:8px;right:8px;max-width:664px;margin:0 auto;bottom:calc(68px + env(safe-area-inset-bottom));z-index:21;background:var(--green);color:var(--on);border-radius:18px;display:flex;align-items:center;gap:6px;padding:8px 6px 8px 14px;box-shadow:0 10px 28px -10px #0009;font-size:13px}
+.tts .tl{flex:1;min-width:0}.tts .tl b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tts .tl span{opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.tc{display:flex;align-items:center;gap:0}.tts .ib{width:38px;height:40px}.tts .ib svg{width:19px;height:19px}.tts .ib.big svg{width:24px;height:24px}
+.rec{border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:12px 14px;margin:0 0 24px;font-family:'Hanken Grotesk',sans-serif}
+.rec .rh{display:flex;align-items:center;gap:8px;font-size:15px}.rec .rh svg{width:20px;height:20px;color:var(--gold2)}.rec .rh span{margin-left:auto;color:var(--mute);font-size:13px}
+.rec input[type=range]{width:100%;margin:8px 0 2px}.rec .tc{justify-content:center;gap:8px}.rec .ib{font-weight:600;font-size:14px}.rec .ib.big{background:var(--green);color:var(--on);border-radius:50%}
 .tts .ib{width:40px;height:40px}.tts .ib:hover{background:#ffffff22}
+.page.listening{padding-bottom:220px}
 .thm{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin:6px 0 14px}
 .thm button{border-radius:14px;padding:0;overflow:hidden;border:2px solid var(--line);text-align:left;min-height:96px;display:flex;flex-direction:column}
 .thm button[aria-pressed=true]{border-color:var(--ink);box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--gold)}
@@ -195,17 +201,18 @@ note:'<path d="M5 4h14v12l-4 4H5z"/><path d="M15 20v-4h4"/>',ear:'<path d="M11 5
 copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 00-1-1H5a1 1 0 00-1 1v10a1 1 0 001 1h3"/>',
 eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',page:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/>',
 next:'<path d="M9 5l7 7-7 7"/>',zoom:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M8 11h6M11 8v6"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
-sync:'<path d="M4 12a8 8 0 0114-5.3L20 9M20 4v5h-5M20 12a8 8 0 01-14 5.3L4 15M4 20v-5h5"/>'};
+prev:'<path d="M6 5h2v14H6zM20 5v14L9 12z"/>',fwd:'<path d="M16 5h2v14h-2zM4 5v14l11-7z"/>',tune:'<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>',headph:'<path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="3" y="14" width="5" height="7" rx="2"/><rect x="16" y="14" width="5" height="7" rx="2"/>',sync:'<path d="M4 12a8 8 0 0114-5.3L20 9M20 4v5h-5M20 12a8 8 0 01-14 5.3L4 15M4 20v-5h5"/>'};
 const ic=(n,f)=>`<svg viewBox="0 0 24 24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="${f?0:1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]}</svg>`;
 let D=null,view='home',cur=-1,tab='cours',ttsState=null,dirty=false,cloud=null,saveTimer=null,saving=false;
 const now=()=>Date.now(),today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
-const blank=()=>({v:1,pos:{c:0,b:0,t:0},read:{},bm:{},hl:{},cards:{},time:{},prefs:{t:0,rt:'auto',autoLight:'fes',autoDark:'night',cust:null,fs:18,ff:'serif',lh:1.68,goal:15,rate:1}});
+const blank=()=>({v:1,pos:{c:0,b:0,t:0},read:{},bm:{},hl:{},cards:{},time:{},listen:null,aud:{},prefs:{t:0,autoNext:false,voice:'',arate:1,rt:'auto',autoLight:'fes',autoDark:'night',cust:null,fs:18,ff:'serif',lh:1.68,goal:15,rate:1}});
 let S=blank();
 try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(blank(),JSON.parse(raw))}catch(e){}
 function merge(a,b){const o=blank();o.pos=(b.pos?.t||0)>(a.pos?.t||0)?b.pos:a.pos;
  for(const k of new Set([...Object.keys(a.read||{}),...Object.keys(b.read||{})]))o.read[k]=Math.max(a.read?.[k]??-1,b.read?.[k]??-1);
  for(const k of new Set([...Object.keys(a.time||{}),...Object.keys(b.time||{})]))o.time[k]=Math.max(a.time?.[k]||0,b.time?.[k]||0);
  for(const f of['bm','hl','cards'])for(const k of new Set([...Object.keys(a[f]||{}),...Object.keys(b[f]||{})])){const x=a[f]?.[k],y=b[f]?.[k];o[f][k]=!x?y:!y?x:((y.t||0)>(x.t||0)?y:x)}
+ o.listen=(b.listen?.t||0)>(a.listen?.t||0)?b.listen:a.listen;o.aud={};for(const k of new Set([...Object.keys(a.aud||{}),...Object.keys(b.aud||{})])){const x=a.aud?.[k],y=b.aud?.[k];o.aud[k]=!x?y:!y?x:((y.t||0)>(x.t||0)?y:x)}
  o.prefs=(b.prefs?.t||0)>(a.prefs?.t||0)?Object.assign(blank().prefs,b.prefs):Object.assign(blank().prefs,a.prefs);return o}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}dirty=true;clearTimeout(saveTimer);saveTimer=setTimeout(push,2500)}
 async function push(){if(!cloud||saving||!dirty)return;saving=true;dirty=false;try{await cloud.ref.set(JSON.parse(JSON.stringify(S)));setSync(true)}catch(e){if(e?.code==='revoked'||e?.code==='invalid_argument'){cloud=null;setSync(false)}else dirty=true}saving=false;if(dirty)saveTimer=setTimeout(push,2500)}
@@ -264,7 +271,7 @@ function home(){view='home';applyPrefs();stopTts();document.body.classList.remov
  <div class="wrap">
  <section class="resume"><div class="ring">${ringSvg(started?pct(p.c):0)}<b>${started?pct(p.c):0}%</b></div>
  <div><h2>${started?'Reprendre · ':'Commencer · '}${esc(c.title)}</h2><div class="meta">${esc(secOf(p.c,p.b))} · encore ~${minsLeft(p.c,p.b)} min</div>
- <button class="btn" id="go">${ic('play',1)} ${started?'Reprendre':'Commencer'}</button></div></section>
+ <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="go">${ic('play',1)} ${started?'Reprendre':'Commencer'}</button><button class="btn ghost" id="gl">${ic('headph')} Écouter</button></div></div></section>
  <div class="stats"><div class="stat"><b>${tp}%</b><span>du livre lu · ~${Math.floor(totalLeft()/60)} h ${totalLeft()%60} min restantes</span></div>
  <div class="stat"><b>${tm}${g?' / '+g:''} min</b><span>${g?'objectif du jour':'lues aujourd\'hui'}</span><div class="bar"><i style="width:${g?Math.min(100,tm/g*100):0}%"></i></div></div>
  <div class="stat"><b>${st} j</b><span>série de lecture</span></div></div>
@@ -272,7 +279,7 @@ function home(){view='home';applyPrefs();stopTts();document.body.classList.remov
  <div class="search">${ic('search')}<input id="q" type="search" placeholder="Rechercher dans le cours…" autocomplete="off"></div>
  <div id="pane"></div>
  <div class="foot"><span id="syncst" class="sync${cloud?' on':''}"><i></i>${cloud?'Synchronisé entre vos appareils':'Enregistré sur cet appareil'}</span></div></div>`;
- $('#go').onclick=()=>openCourse(p.c,p.b);
+ $('#go').onclick=()=>openCourse(p.c,p.b);$('#gl').onclick=()=>{const l=S.listen&&S.listen.t>=p.t?S.listen:p;openCourse(l.c,l.b);setTimeout(()=>startTts(l.b),350)};
  $$('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;$$('[data-tab]').forEach(x=>x.setAttribute('aria-selected',x===b));$('#q').value='';pane()});
  let qt;$('#q').oninput=e=>{clearTimeout(qt);qt=setTimeout(()=>{const v=e.target.value.trim();v.length>1?searchPane(v):pane()},180)};
  pane()}
@@ -309,13 +316,14 @@ function openCourse(i,b=0,flash=false){view='read';applyPrefs();cur=i;stopTts();
  app.innerHTML=`<div class="top"><div class="in"><button class="ib" id="bk" aria-label="Retour à l'accueil">${ic('back')}</button><h2>${esc(c.title)} · ${esc(firstHead(i))}<small id="sub">${esc(c.date)}</small></h2><button class="ib" id="srch" aria-label="Rechercher">${ic('search')}</button><button class="ib" id="fax" aria-label="Voir la page d'origine">${ic('page')}</button></div><div class="prog"><i id="pg"></i></div></div>
  <article class="page" id="pageEl"><header class="chead"><div class="k">Cours ${i+1} sur ${C().length}</div><h1>${esc(firstHead(i))}</h1><div class="d">${esc(c.date)} · ~${Math.max(1,Math.round(c.words/WPM))} min de lecture</div></header>
  <details class="ess"${S.read[i]==null?' open':''}><summary>L'essentiel de ce cours <span>${ic('next').replace('<svg','<svg style="width:18px;height:18px;transform:rotate(90deg)"')}</span></summary><p>${esc(c.sum)}</p><div class="acts"><button class="btn small ghost" data-rev>${ic('cards')} ${c.cards.length} fiches</button><button class="btn small ghost" data-listen>${ic('ear')} Écouter le cours</button></div></details>
+ ${recHtml(i)}
  ${c.blocks.map((x,k)=>blkHtml(i,x,k)).join('')}
  <div class="endc"><div class="k" style="color:var(--gold2);font-weight:600">Fin du ${esc(c.title.toLowerCase())}</div><h3>Ancrez ce que vous venez de lire</h3><p style="color:var(--mute);margin:0">${c.cards.length} fiches de révision vous attendent.</p><div class="acts"><button class="btn" data-rev>${ic('cards')} Réviser</button>${i<C().length-1?`<button class="btn ghost" id="nx">Cours ${i+2} ${ic('next')}</button>`:''}</div></div></article>
  <nav class="dock"><div class="in"><button id="dtoc">${ic('toc')}Sommaire</button><button id="daa">${ic('aa')}Affichage</button><button id="dtts">${ic('ear')}Écouter</button><button id="dbm">${ic('bm')}Marque-page</button><button id="dfo">${ic('eye')}Focus</button></div></nav>`;
  $('#bk').onclick=()=>{history.pushState(null,'','#accueil');home()};$('#srch').onclick=()=>{tab='cours';home();setTimeout(()=>$('#q')?.focus(),50)};
  $('#fax').onclick=()=>fax(pageAt(i,curBlock()));
  $$('[data-rev]').forEach(b=>b.onclick=()=>review(i));$$('[data-listen]').forEach(b=>b.onclick=()=>startTts(0));
- const nx=$('#nx');if(nx)nx.onclick=()=>openCourse(i+1,0);
+ wireRec(i);const nx=$('#nx');if(nx)nx.onclick=()=>openCourse(i+1,0);
  $('#dtoc').onclick=tocSheet;$('#daa').onclick=()=>{sheet('<h3>Affichage</h3>'+optsHtml(false));wireOpts($('.sheet'))};
  $('#dtts').onclick=()=>ttsState?stopTts():startTts(curBlock());$('#dbm').onclick=()=>addBm(curBlock());
  $('#dfo').onclick=()=>{document.body.classList.toggle('focus');if(document.body.classList.contains('focus'))toast('Mode focus · touchez le texte deux fois pour sortir')};
@@ -379,7 +387,7 @@ function optsHtml(full){const p=S.prefs;const sw=(id,t,lab)=>`<button data-th="$
  <div class="lab">Police</div><div class="seg" data-k="ff">${[['serif','Livre'],['sans','Moderne']].map(([v,l])=>`<button data-v="${v}" aria-pressed="${p.ff===v}">${l}</button>`).join('')}</div>
  <div class="lab">Taille du texte · <span id="fsv">${p.fs}</span> px</div><div class="rowx"><span style="font-size:14px">A</span><input type="range" id="fs" min="15" max="26" step="1" value="${p.fs}"><span style="font-size:22px">A</span></div>
  <div class="lab">Interligne</div><div class="seg" data-k="lh">${[[1.5,'Serré'],[1.68,'Normal'],[1.9,'Aéré']].map(([v,l])=>`<button data-v="${v}" aria-pressed="${p.lh==v}">${l}</button>`).join('')}</div>
- <div class="lab">Vitesse de lecture à voix haute · <span id="rv">${p.rate}</span>×</div><input type="range" id="rate" min="0.7" max="1.4" step="0.1" value="${p.rate}">
+ 
  ${full?`<div class="lab">Objectif quotidien</div><div class="seg" data-k="goal">${[[0,'Aucun'],[10,'10 min'],[15,'15 min'],[20,'20 min'],[30,'30 min']].map(([v,l])=>`<button data-v="${v}" aria-pressed="${p.goal==v}">${l}</button>`).join('')}</div>
  <div class="lab" style="margin-top:14px">Transférer ma lecture vers un autre appareil</div><p style="color:var(--mute);font-size:14px;margin:2px 0 8px">${cloud?'La synchronisation est active : votre position, vos marque-pages et vos notes suivent automatiquement. Le code sert à passer vers la version GitHub (ou l\'inverse).':'Sur cette version, la lecture est enregistrée sur cet appareil. Copiez le code ici, puis collez-le sur l\'autre appareil.'}</p>
  <div class="two"><button class="btn ghost" id="exp">${ic('copy')} Copier mon code</button><button class="btn ghost" id="imp">${ic('sync')} Coller un code</button></div>`:''}`}
@@ -417,26 +425,53 @@ function review(ci){let q=[];(ci<0?C().map((c,i)=>i):[ci]).forEach(i=>C()[i].car
   $('#yes').onclick=()=>grade(1);$('#no').onclick=()=>grade(0)};
  sheet('');draw()}
 /* ---------- lecture à voix haute ---------- */
-let tts=null;
+let tts=null,sleepAt=0,sleepEnd=false,frVoices=[];
+function loadVoices(){if(!('speechSynthesis' in window))return;frVoices=speechSynthesis.getVoices().filter(v=>/^fr/i.test(v.lang)).sort((a,b)=>(b.localService-a.localService)||a.name.localeCompare(b.name))}
+if('speechSynthesis' in window){loadVoices();speechSynthesis.addEventListener?.('voiceschanged',loadVoices)}
 function speakText(k){const x=C()[cur].blocks[k];if(!x||!x.h)return '';return plain(x.h).replace(/ﷺ/g,', salla Llâhou ʿalayhi wa sallam,').replace(/رضي الله عنهما?|رضي الله عنها|رضي الله عنه|رضي الله عنهم/g,'')}
-function ttsBar(){let b=$('.tts');if(!ttsState){b?.remove();$('#dtts')?.classList.remove('on');return}
+function lastSpeakable(){const b=C()[cur].blocks;for(let j=b.length-1;j>=0;j--)if(speakText(j))return j;return 0}
+function ttsBar(){$('#pageEl')?.classList.toggle('listening',!!ttsState);let b=$('.tts');if(!ttsState){b?.remove();$('#dtts')?.classList.remove('on');return}
  if(!b){b=document.createElement('div');b.className='tts';document.body.appendChild(b)}$('#dtts')?.classList.add('on');
- b.innerHTML=`<span>Lecture</span><button class="ib" id="tp" aria-label="${ttsState.paused?'Reprendre':'Pause'}">${ic(ttsState.paused?'play':'pause',1)}</button><button class="ib" id="ts" aria-label="Arrêter">${ic('stop',1)}</button>`;
- $('#tp').onclick=()=>{ttsState.paused?resumeT():pauseT()};$('#ts').onclick=stopTts}
-function mark(k){$$('.blk.speaking').forEach(e=>e.classList.remove('speaking'));const el=$(`[data-b="${k}"]`);if(el){el.classList.add('speaking');const r=el.getBoundingClientRect();if(r.top<80||r.bottom>innerHeight-90)el.scrollIntoView({block:'center',behavior:'smooth'})}}
-async function startTts(k){stopTts();const tok={k,paused:false,id:now()};ttsState=tok;ttsBar();
+ const k=ttsState.k,n=C()[cur].blocks.length,left=minsLeft(cur,k),sl=sleepAt?Math.max(0,Math.ceil((sleepAt-now())/60000))+' min':sleepEnd?'fin du cours':'';
+ b.innerHTML=`<div class="tl"><b>${esc(secOf(cur,k))}</b><span>§ ${k+1}/${n} · ~${left} min${sl?' · ⏾ '+sl:''} · ${S.prefs.rate}×</span></div><div class="tc"><button class="ib" id="tpv" aria-label="Paragraphe précédent">${ic('prev',1)}</button><button class="ib big" id="tp" aria-label="${ttsState.paused?'Reprendre':'Pause'}">${ic(ttsState.paused?'play':'pause',1)}</button><button class="ib" id="tnx" aria-label="Paragraphe suivant">${ic('fwd',1)}</button><button class="ib" id="topt" aria-label="Options d'écoute">${ic('tune')}</button><button class="ib" id="ts" aria-label="Arrêter">${ic('x')}</button></div>`;
+ $('#tp').onclick=()=>{ttsState.paused?resumeT():pauseT()};$('#ts').onclick=stopTts;$('#tpv').onclick=()=>startTts(Math.max(0,ttsState.k-1));$('#tnx').onclick=()=>startTts(Math.min(n-1,ttsState.k+1));$('#topt').onclick=listenOpts}
+function listenOpts(){const p=S.prefs;sheet(`<h3>Options d'écoute</h3>
+ <div class="lab">Vitesse</div><div class="seg" id="spd">${[0.75,0.9,1,1.15,1.3,1.5].map(v=>`<button data-v="${v}" aria-pressed="${p.rate==v}">${v}×</button>`).join('')}</div>
+ <div class="lab">Minuteur de sommeil</div><div class="seg" id="slp">${[[0,'Aucun'],[10,'10 min'],[20,'20 min'],[30,'30 min'],[-1,'Fin du cours']].map(([v,l])=>`<button data-v="${v}" aria-pressed="${(v===0&&!sleepAt&&!sleepEnd)||(v===-1&&sleepEnd)}">${l}</button>`).join('')}</div>
+ ${!tts&&frVoices.length?`<div class="lab">Voix</div><select id="vx"><option value="">Voix par défaut</option>${frVoices.map(v=>`<option value="${esc(v.name)}"${p.voice===v.name?' selected':''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('')}</select><p style="color:var(--mute);font-size:13px;margin:6px 0 12px">Sur iPhone, des voix plus naturelles (« Améliorée » ou « Premium ») se téléchargent dans Réglages → Accessibilité → Contenu énoncé → Voix → Français.</p>`:''}
+ <label class="rowx" style="gap:12px;margin:8px 0 4px;font-size:15px"><input type="checkbox" id="anx" style="width:22px;height:22px;accent-color:var(--green)"${p.autoNext?' checked':''}> Enchaîner automatiquement sur le cours suivant</label>`);
+ $$('#spd button').forEach(b=>b.onclick=()=>{S.prefs.rate=+b.dataset.v;S.prefs.t=now();save();$$('#spd button').forEach(x=>x.setAttribute('aria-pressed',x===b));ttsRate()});
+ $$('#slp button').forEach(b=>b.onclick=()=>{const v=+b.dataset.v;sleepEnd=v===-1;sleepAt=v>0?now()+v*60000:0;$$('#slp button').forEach(x=>x.setAttribute('aria-pressed',x===b));ttsBar()});
+ const vx=$('#vx');if(vx)vx.onchange=()=>{S.prefs.voice=vx.value;S.prefs.t=now();save();if(ttsState)startTts(ttsState.k)};
+ $('#anx').onchange=e=>{S.prefs.autoNext=e.target.checked;S.prefs.t=now();save()}}
+function mark(k){$$('.blk.speaking').forEach(e=>e.classList.remove('speaking'));const el=$(`[data-b="${k}"]`);if(el){el.classList.add('speaking');const r=el.getBoundingClientRect();if(r.top<80||r.bottom>innerHeight-170)el.scrollIntoView({block:'center',behavior:'smooth'})}
+ S.listen={c:cur,b:k,t:now()};S.pos={c:cur,b:k,t:now()};if((S.read[cur]??-1)<k)S.read[cur]=k;if(!mark.t||now()-mark.t>8000){mark.t=now();save()}ttsBar();media()}
+function media(){if(!('mediaSession' in navigator)||!ttsState)return;try{navigator.mediaSession.metadata=new MediaMetadata({title:secOf(cur,ttsState.k),artist:C()[cur].title+' · '+firstHead(cur),album:D.title});
+ navigator.mediaSession.setActionHandler('play',()=>resumeT());navigator.mediaSession.setActionHandler('pause',()=>pauseT());navigator.mediaSession.setActionHandler('previoustrack',()=>startTts(Math.max(0,ttsState.k-1)));navigator.mediaSession.setActionHandler('nexttrack',()=>startTts(ttsState.k+1))}catch(e){}}
+function sleepHit(){if(sleepAt&&now()>=sleepAt){sleepAt=0;stopTts();toast('Minuteur : lecture arrêtée');return true}return false}
+function courseEnd(tok){if(ttsState!==tok)return;if(!sleepEnd&&S.prefs.autoNext&&cur<C().length-1){const n=cur+1;stopTts();openCourse(n,0);setTimeout(()=>startTts(0),400)}else{sleepEnd=false;stopTts();toast('Fin du cours')}}
+async function startTts(k){stopTts(true);try{$('#au')?.pause()}catch(e){}const tok={k,paused:false,id:now()};ttsState=tok;activity=now();
  if(tts){const lines=[];for(let j=k;j<C()[cur].blocks.length;j++){const t=speakText(j);if(t)lines.push({text:t.slice(0,1990),id:String(j),language:'fr',rate:S.prefs.rate})}
-  try{tts.onLine?.(({id})=>{if(ttsState===tok&&id){tok.k=+id;mark(+id)}});await tts.speak(lines.slice(0,60));if(ttsState===tok){for(let s=60;s<lines.length&&ttsState===tok;s+=60)await tts.speak(lines.slice(s,s+60))}}catch(e){if(e?.code==='not_granted'){tts=null;if(ttsState===tok){ttsState=null;startTts(k)}return}}
-  if(ttsState===tok)stopTts();return}
+  mark(k);try{tts.onLine?.(({id})=>{if(ttsState===tok&&id){tok.k=+id;mark(+id);sleepHit()}});for(let s=0;s<lines.length&&ttsState===tok;s+=60)await tts.speak(lines.slice(s,s+60))}catch(e){if(e?.code==='not_granted'){tts=null;if(ttsState===tok){ttsState=null;startTts(k)}return}if(ttsState===tok&&e?.code!=='busy')return}
+  courseEnd(tok);return}
  if(!('speechSynthesis' in window)){ttsState=null;ttsBar();return toast('La lecture à voix haute n\'est pas disponible sur ce navigateur')}
- const voices=speechSynthesis.getVoices(),v=voices.find(x=>/^fr/i.test(x.lang)&&/Thomas|Amélie|Audrey|Google/i.test(x.name))||voices.find(x=>/^fr/i.test(x.lang));
- const step=j=>{if(ttsState!==tok)return;while(j<C()[cur].blocks.length&&!speakText(j))j++;if(j>=C()[cur].blocks.length)return stopTts();tok.k=j;mark(j);
-  const u=new SpeechSynthesisUtterance(speakText(j));u.lang='fr-FR';if(v)u.voice=v;u.rate=S.prefs.rate;u.onend=()=>{if(ttsState===tok&&!tok.paused)step(j+1)};u.onerror=ev=>{if(ttsState===tok&&ev.error!=='interrupted'&&ev.error!=='canceled')step(j+1)};speechSynthesis.speak(u)};
- speechSynthesis.cancel();step(k)}
+ const v=frVoices.find(x=>x.name===S.prefs.voice)||frVoices.find(x=>/Thomas|Amélie|Audrey|Google/i.test(x.name))||frVoices[0];
+ const step=j=>{if(ttsState!==tok||sleepHit())return;while(j<C()[cur].blocks.length&&!speakText(j))j++;if(j>=C()[cur].blocks.length)return courseEnd(tok);tok.k=j;mark(j);
+  const txt=speakText(j),t0=now(),u=new SpeechSynthesisUtterance(txt);u.lang='fr-FR';if(v)u.voice=v;u.rate=S.prefs.rate;const bad=()=>{tok.fail=(tok.fail||0)+1;if(tok.fail>=3){stopTts();toast('La voix ne répond pas sur cet appareil. Essayez une autre voix dans les options d\'écoute.');return true}return false};u.onend=()=>{if(ttsState!==tok||tok.paused)return;if(txt.length>60&&now()-t0<250){if(bad())return}else tok.fail=0;step(j+1)};u.onerror=ev=>{if(ttsState===tok&&!tok.paused&&ev.error!=='interrupted'&&ev.error!=='canceled'){if(!bad())step(j+1)}};speechSynthesis.speak(u)};
+ speechSynthesis.cancel();setTimeout(()=>step(k),60)}
 function pauseT(){if(!ttsState)return;ttsState.paused=true;if(tts)tts.pause?.();else speechSynthesis.cancel();ttsBar()}
 function resumeT(){if(!ttsState)return;const k=ttsState.k;if(tts&&tts.resume){ttsState.paused=false;tts.resume();ttsBar()}else startTts(k)}
-function ttsRate(){if(tts&&ttsState)tts.setRate?.(S.prefs.rate)}
-function stopTts(){if(!ttsState)return;ttsState=null;try{tts?tts.stop():speechSynthesis.cancel()}catch(e){}$$('.blk.speaking').forEach(e=>e.classList.remove('speaking'));ttsBar()}
+function ttsRate(){if(!ttsState)return;if(tts)tts.setRate?.(S.prefs.rate);else if(!ttsState.paused)startTts(ttsState.k);ttsBar()}
+function stopTts(keep){if(!ttsState)return;ttsState=null;try{tts?tts.stop():speechSynthesis.cancel()}catch(e){}if(!keep){$$('.blk.speaking').forEach(e=>e.classList.remove('speaking'));sleepAt=0}ttsBar()}
+/* ---------- enregistrements audio des cours ---------- */
+function recHtml(i){const c=C()[i];if(!c.audio)return '';return `<div class="rec"><div class="rh">${ic('ear')}<b>Enregistrement du cours</b><span id="rt"></span></div><audio id="au" preload="metadata" src="${esc(c.audio)}"></audio><input type="range" id="ap" min="0" max="1000" value="0" aria-label="Position"><div class="tc"><button class="ib" id="ab15" aria-label="Reculer de 15 secondes">−15</button><button class="ib big" id="apl" aria-label="Lecture">${ic('play',1)}</button><button class="ib" id="af30" aria-label="Avancer de 30 secondes">+30</button><button class="ib" id="asp" aria-label="Vitesse">${S.prefs.arate||1}×</button></div></div>`}
+function wireRec(i){const a=$('#au');if(!a)return;const fmt=s=>{s=Math.floor(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};S.aud=S.aud||{};
+ a.playbackRate=S.prefs.arate||1;a.addEventListener('loadedmetadata',()=>{const p=S.aud[i];if(p&&p.pos<a.duration-5)a.currentTime=p.pos;upd()});
+ const upd=()=>{$('#rt').textContent=fmt(a.currentTime)+' / '+fmt(a.duration);if(a.duration)$('#ap').value=a.currentTime/a.duration*1000;$('#apl').innerHTML=ic(a.paused?'play':'pause',1)};
+ a.addEventListener('timeupdate',()=>{upd();activity=now();if(!wireRec.t||now()-wireRec.t>5000){wireRec.t=now();S.aud[i]={pos:a.currentTime,t:now()};save()}});a.addEventListener('play',()=>{stopTts();upd();if('mediaSession' in navigator)try{navigator.mediaSession.metadata=new MediaMetadata({title:C()[i].title+' · '+firstHead(i),album:D.title});navigator.mediaSession.setActionHandler('seekbackward',()=>a.currentTime-=15);navigator.mediaSession.setActionHandler('seekforward',()=>a.currentTime+=30)}catch(e){}});a.addEventListener('pause',()=>{S.aud[i]={pos:a.currentTime,t:now()};save();upd()});
+ $('#apl').onclick=()=>a.paused?a.play().catch(()=>toast('Lecture impossible')):a.pause();$('#ab15').onclick=()=>a.currentTime=Math.max(0,a.currentTime-15);$('#af30').onclick=()=>a.currentTime+=30;
+ $('#ap').oninput=e=>{if(a.duration)a.currentTime=e.target.value/1000*a.duration};
+ $('#asp').onclick=()=>{const r=[0.8,1,1.2,1.5,1.75,2],n=r[(r.indexOf(S.prefs.arate||1)+1)%r.length];S.prefs.arate=n;S.prefs.t=now();a.playbackRate=n;$('#asp').textContent=n+'×';save()}}
 /* ---------- démarrage ---------- */
 function route(){const m=location.hash.match(/^#cours-(\d+)$/);if(m&&D){const i=+m[1]-1;if(C()[i]){if(view!=='read'||cur!==i)openCourse(i,S.pos.c===i?S.pos.b:0);return}}if(view!=='home'||!$('.cover'))home()}
 addEventListener('popstate',route);
